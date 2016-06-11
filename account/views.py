@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib import messages
 from django.db.models import Count
 from django.contrib.auth import authenticate, login
@@ -87,6 +88,8 @@ def post_new(request):
             post= form.save(commit=False)
             post.author = request.user
             post.save()
+            #return redirect(reverse_lazy('account:post_list'))
+            return redirect('account:post_detail', post.publish.year, post.publish.strftime('%m'), post.publish.strftime('%d'), post.slug)
     else:
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form, 'section': 'add_new'})

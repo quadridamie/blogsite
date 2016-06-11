@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.template.defaultfilters import default
+from django.template.defaultfilters import default, slugify
 from django.core.urlresolvers import reverse 
 
 from taggit.managers import TaggableManager
@@ -21,7 +21,7 @@ class Post(models.Model):
         ('published', 'Published'),
     )
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique_for_date='publish')
+    slug = models.CharField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(User, related_name='blog_posts')
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
@@ -46,6 +46,11 @@ class Post(models.Model):
                              self.publish.strftime('%m'),
                              self.publish.strftime('%d'),
                              self.slug])
+     
+    def save(self):
+        super(Post, self).save()
+        self.slug = '%s' %(slugify(self.title))
+        super(Post, self).save()
     
 class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comments')
