@@ -6,8 +6,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .forms import CommentForm, LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
+from .forms import PostForm, CommentForm, LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile, Post
+from pytz import timezone
 
 # Create your views here.
 def user_login(request):
@@ -78,6 +79,17 @@ def post_detail(request, year, month, day, post):
                    'comments': comments,
                    'comment_form': comment_form,
                    'similar_posts':similar_posts})
+
+def post_new(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post= form.save(commit=False)
+            post.author = request.user
+            post.save()
+    else:
+        form = PostForm()
+    return render(request, 'blog/post_edit.html', {'form': form, 'section': 'add_new'})
     
 def register(request):
     if request.method == 'POST':

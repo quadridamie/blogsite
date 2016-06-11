@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Profile, Comment
+from .models import Post, Profile, Comment
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -14,7 +14,8 @@ class CommentForm(forms.ModelForm):
         
 class PostForm(forms.ModelForm):
     class Meta:
-        fields = ('title', 'body')
+        model = Post
+        fields = ('title', 'body', 'tags', 'status')
     
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(label='Password',

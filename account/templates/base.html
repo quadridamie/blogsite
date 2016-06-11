@@ -15,8 +15,8 @@
     			<li {%if section == "dashboard"%}class="selected"{%endif%}>
     				<a href="{% url "dashboard" %}">My dashboard</a>
 				</li>
-				<li {% if section == "images" %}class="selected"{% endif %}>
-					<a href="#">Images</a>
+				<li {% if section == "add_new" %}class="selected"{% endif %}>
+					<a href="{% url 'account:post_new' %}">Add new</a>
 				</li>
 				<li {% if section == "people" %}class="selected"{% endif %}>
 					<a href="#">People</a>
