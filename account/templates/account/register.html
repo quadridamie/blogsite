@@ -2,11 +2,16 @@
 {% block title %} Create an account {% endblock %}
 
 {% block content %}
-	<h1>Create an account</h1>
-	<p>Please sign up using the follwing form:</p>
+<div class="col-md-8">
+<div class="modal-dialog">
+	<div class="loginmodal-container">
+	<h1 class="text-center">Create Account</h1><br>
 	<form action="." method="post">
 		{{user_form.as_p}}
 		{% csrf_token %}
-		<input type="submit" value="Create Account">
+		<input type="submit" class="login loginmodal-submit" value="Create Account">
 	</form>
+	</div>
+</div>
+</div>
 {% endblock %}

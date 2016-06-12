@@ -2,21 +2,24 @@
 {% block title %}Log-in{% endblock %}
 
 {% block content %}
-	<h2>Log-in</h2>
+<div class="col-md-8">
+ <div class="modal-dialog">
 	{% if form.errors %}
-	<p>Your username and password didn't match.
-		Please try again.</p>
+	<p class="text-danger">Your username and password didn't match. Please try again.</p>
 	{%else%}
-		<p>Please use the following form to log-in:</p>
+	<p class="text-info">Please make use of the form below to login</p>
 	{%endif%}
-	<div class="login-form">
-	<form action="{% url 'login' %}" method="POST">
+	<div class="loginmodal-container">
+		<h1 class="text-center">Login to Your Account</h1><br>
+		<form action="{% url 'login' %}" method="POST">
 		{{ form.as_p }}
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{{next}}"/>
-		<p><input type="submit" value="Log-in"></p>
+		<input type="submit" class="login loginmodal-submit" value="Login">
 	</form>
-		<a href="{% url "password_reset" %}">Forgotten your password?</a>
+	<div class="login-help">
+		<a href="{%url "register"%}">Register</a> - <a href="{% url "password_reset" %}">Forgot password</a>
+	</div>
 	</div>
 	<div class="social">
 		<ul>
@@ -25,6 +28,9 @@
 			</li>
 		</ul>
 	</div>
+	</div>
+	</div>
+
 	{% endblock %}
 		
 	

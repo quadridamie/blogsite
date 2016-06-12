@@ -3,24 +3,32 @@
 {%block title%}{{post.title}}{%endblock%}
 
 {%block content%}
+	<div class="col-lg-8">
 	<h1>{{post.title}}</h1>
 	<p class="date">
-		Published {{post.publish}} by {{post.author}}
+		by {{post.author}}
 	</p>
-	{{post.body|linebreaks}}
-	Tags: 
+	<p><span class="glyphicon glyphicon-time"></span> Posted {{post.publish}} 
+	<p>Tags: 
 	  {% for tag in post.tags.all %}
           <a href="{% url "account:post_list_by_tag" tag.slug %}">{{ tag.name }}</a>
        {% if not forloop.last %}, {% endif %}
         {% endfor %}
-	<h4>Similar posts</h4>
+    </p>
+    <hr>
+    <p class="lead">
+    {{post.body|linebreaks}}
+	</p>
+	<hr>
+	<h4 class="text-primary">Similar posts</h4>
 	{% for post in similar_posts %}
 		<p>
 			<a href="{{post.get_absolute_url }}">{{ post.title }}</a>
 		</p>
 	{% empty %}
-	 There are no similar posts yet.
+	 <p class="text-muted">There are no similar posts yet.</p>
 	{% endfor %}
+
 	{% with comments.count as total_comments %}
 		<h3>
 			{{total_comments}} comment{{total_comments|pluralize}}
@@ -34,17 +42,25 @@
 		{{comment.body|linebreaks}}
 	</div>
 	{%empty%}
-		<p>There are no comments yet.</p>
+		<p class="text-muted">There are no comments yet.</p>
 	{%endfor%}
-	{% if new_comment%}	
-		<h2>Your comment has been added</h2>
+	{%if request.user.is_authenticated%}
+		{% if new_comment%}	
+			<p class="text-success">Your comment has been added</p>
+		{%else%}
+		<div class="commentmodal-container">
+			<p><h4 class="text-info">Leave a comment:</h4></p>
+				<form  role="form" action="{{post.get_absolute_url}}" method="post">
+					{{ comment_form.as_p}}
+					{% csrf_token %}
+					<input type="hidden" name="next" value="{{next}}"/>
+					<p><button type="submit" class="btn btn-primary">Submit</button></p>
+				</form>
+		</div>
+		{%endif%}
 	{%else%}
-	<h2>Add a new comment</h2>
-		<form action="." method="post">
-			{{ comment_form.as_p}}
-			{% csrf_token %}
-			<p><input type="submit" value="Add comment"></p>
-		</form>
+		<p><h4 class="text-primary"><a href="{%url "login"%}">Login</a> to comment</h4></p>
 	{% endif %}
 	{%endwith%}
+</div>
 {%endblock%}
